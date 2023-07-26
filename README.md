@@ -18,7 +18,7 @@ The Redwood Help Center Enhancer implements the following features through addit
 
 1. **Fully Expand Navigation Menu**: This feature allows users to expand the navigation menu to the last level, providing a complete view of the available documentation sections.
 
-2. **Close Auxillary Navigation Drawer**: To maximize the screen space for reading the documentation, this feature automatically closes the auxillary navigation drawer conveniently.
+2. **Close Auxiliary Navigation Drawer**: To maximize the screen space for reading the documentation, this feature automatically closes the auxiliary navigation drawer conveniently.
 
 3. **Access Expand/Collapse Button Anywhere**: Users can access the expand/collapse button from anywhere on the page, making it easier to toggle the navigation menu.
 
@@ -38,14 +38,14 @@ To use the this browser extension, follow these steps:
 
 4. Click on the buttons to utilize the respective features:
    - To fully expand the navigation menu, click the "Expand" button.
-   - To reopen the auxillary navigation drawer, click the "Chevron" icon button.
+   - To reopen the auxiliary navigation drawer, click the "Chevron" icon button.
    - To access the expand/collapse button from anywhere, click the "Expand/Collapse" button.
    - To quickly view the document title, click the "Document Title" button.
    - To fast scroll to the top of the page, click the "Scroll to Top" button.
 
 ## Feedback and Issues
 
-If you encounter any problems while using this browser entension or have suggestions for additional features, please feel free to submit issues or provide feedback on the GitHub repository.
+If you encounter any problems while using this browser extension or have suggestions for additional features, please feel free to submit issues or provide feedback on the GitHub repository.
 
 ## Social Media
 Click to [follow me](https://www.x.com/Matt_Mulvaney) on X 
