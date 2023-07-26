@@ -1,0 +1,23 @@
+{
+  "name": "Redwood Help Center Enhancer",
+  "description": "Expands the Navigation Drawer to its full extent and adds additional navigation options to enhance the Redwood Oracle Help Center site's functionality",
+  "version": "23.1.2",
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*/*"
+      ],
+      "js": [
+        "content.js"     
+      ],
+      "css": [
+        "style.css"     
+      ]
+    }
+  ],
+  "icons": {
+    "128": "icon128.png"
+  },
+  "short_name": "Redwood Help Center Enhancer",
+  "manifest_version": 3
+}
