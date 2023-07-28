@@ -42,10 +42,16 @@ function NavDrawerIsOpen() {
   return document.querySelectorAll("#navigationDrawer .oj-drawer-opened").length > 0;
 }
 
+function forceNavDrawerOpen() {
+  if (!NavDrawerIsOpen()) {
+    document.getElementById('toggleNavigationDrawer').click();
+  }
+}
+
 function setupCustomButton(p_id, p_title, p_icon, onClickFunction) {
   var wad = `
     <div role="listitem"><roj-button id="{ID}"
-    class="oj-lg-margin-3x-top oj-button-sm oj-button oj-button-half-chrome oj-button-icon-only oj-enabled oj-complete oj-default"
+    class="oj-lg-margin-3x-top oj-button-sm oj-button oj-button-half-chrome oj-button-icon-only oj-enabled oj-complete oj-default redwood-button-e"
     aria-controls="navigationDrawer" aria-expanded="true" title="{TITLE}"><button class="oj-button-button"
         aria-label="{TITLE}">
         <div class="oj-button-label"><span class="oj-button-icon oj-start"><span slot="startIcon"
@@ -89,6 +95,7 @@ function addCustomButtons() {
 
   // -- Fully Expand
   setupCustomButton('redwoodFullyExpand', 'Expand to the Last Level [Added by Browser Extension]', expandIcon, function () {
+    forceNavDrawerOpen();
     var buttonElement = document.getElementById('redwoodFullyExpand');
     const elementsToReplace = buttonElement.querySelectorAll('.redwood-icon-slot');
     elementsToReplace.forEach((element) => {
@@ -100,27 +107,37 @@ function addCustomButtons() {
     setTimeout(expandNavigationMenu, 10);
   });
 
-
   // -- Expand/Collapse
   setupCustomButton('redwoodToggleExpand', 'Expand/Collapse [Added by Browser Extension]', 'oj-ux-ico-accordion', function () {
+    forceNavDrawerOpen();
     document.getElementById('toggleTreeView').click();
   });
 
-  // -- Title/Copyright
-  setupCustomButton('redwoodGotoTitle', 'Title/Copyright [Added by Browser Extension]', 'oj-ux-ico-first-paragraph', function () {
-    const navigationDrawer = document.getElementById("navigationDrawer");
-    const firstInsElement = navigationDrawer.querySelector("ins");
-    if (firstInsElement) {
-      firstInsElement.click();
-    }
+  // -- Go to the First Chapter
+  setupCustomButton('redwoodGotoTitle', 'Go to the First Chapter [Added by Browser Extension]', 'oj-ux-ico-first-paragraph', function () {
+    forceNavDrawerOpen();
+    // Wait 10ms for the Nav Drawer to open
+    setTimeout(function () {
+      const navigationDrawer = document.getElementById("navigationDrawer");
+      const firstInsElement = navigationDrawer.querySelector("ins");
+      if (firstInsElement) {
+        firstInsElement.click();
+      }
+    }, 10);
+
   });
 
   // -- Scroll to the Top
   setupCustomButton('redwoodToTheTop', 'Scroll to the Top [Added by Browser Extension]', 'oj-ux-ico-arrow-circle-up', function () {
-    window.scrollTo({
-      top: 0,
-      behavior: 'auto'
-    });
+    var contentContainer = document.getElementById('contentContainer');
+    if (contentContainer && contentContainer.getBoundingClientRect().top < 0) {
+      contentContainer.scrollIntoView({ behavior: 'auto' });
+    } else {
+      window.scrollTo({
+        top: 0,
+        behavior: 'auto'
+      });
+    }
   });
 }
 
@@ -135,27 +152,37 @@ function shutAuxiliaryToolsDrawer() {
 function init() {
 
   if (isOracleHelpCenter) {
-    const observer = new MutationObserver((mutationsList) => {
+    const navDrawerObserver = new MutationObserver((mutationsList) => {
       for (const mutation of mutationsList) {
         if (
           mutation.type === 'childList' &&
-          document.querySelector("#navigationDrawer")
+          document.querySelector("#navigationDrawer") &&
+          !document.querySelector(".redwood-button-e")
         ) {
-
           // Wait until OJ renders the Navigation Drawer
-          if (NavDrawerIsOpen()
-          ) {
-            // Disconnect Observer
-            observer.disconnect();
-            addCustomButtons();
-            shutAuxiliaryToolsDrawer();
-            break;
-          }
+          // Or add the buttons back if responsive theme removes them
+          addCustomButtons();
+          break;
         }
       }
     });
 
-    observer.observe(document.documentElement, { childList: true, subtree: true });
+    const auxDrawerObserver = new MutationObserver((mutationsList) => {
+      for (const mutation of mutationsList) {
+        if (
+          mutation.type === 'childList' &&
+          auxiliaryToolsDrawerOpen()
+        ) {
+          // Wait until OJ renders the Aux Drawer
+          auxDrawerObserver.disconnect();
+          shutAuxiliaryToolsDrawer();
+          break;
+        }
+      }
+    });
+
+    navDrawerObserver.observe(document.documentElement, { childList: true, subtree: true });
+    auxDrawerObserver.observe(document.documentElement, { childList: true, subtree: true });
   }
 
 }
